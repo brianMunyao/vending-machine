@@ -1,18 +1,18 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const AppButton = ({ title = '', onClick }) => {
+const AppButton = ({ title = '', disabled, onClick }) => {
 	return (
-		<Container onClick={onClick} role="button">
+		<Container disabled={disabled} onClick={onClick} role="button">
 			{title}
 		</Container>
 	);
 };
 
-const Container = styled.div`
+const Container = styled.button`
 	appearance: none;
-	background-color: #000000;
-	border: 2px solid #1a1a1a;
+	background-color: #393939;
+	border: 2px solid #393939;
 	border-radius: 15px;
 	box-sizing: border-box;
 	color: #ffffff;
@@ -39,12 +39,16 @@ const Container = styled.div`
 	will-change: transform;
 
 	&:disabled {
-		pointer-events: none;
+		cursor: not-allowed;
+		/* pointer-events: none; */
+		background: #c7c7c7;
+		border: 2px solid #c7c7c7;
 	}
 
 	&:hover {
-		box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
-		transform: translateY(-2px);
+		box-shadow: ${({ disabled }) =>
+			disabled ? '' : 'rgba(0, 0, 0, 0.25) 0 8px 15px'};
+		transform: ${({ disabled }) => (disabled ? '' : 'translateY(-2px)')};
 	}
 
 	&:active {

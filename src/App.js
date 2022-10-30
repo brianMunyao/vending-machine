@@ -46,8 +46,12 @@ const App = () => {
 		return total;
 	};
 
+	const isMoneySufficient = () => {
+		return moneyAvailable - getGrandTotal(pickedItems) < 0;
+	};
+
 	return (
-		<Container>
+		<Container insufficient={isMoneySufficient()}>
 			<div className="list">
 				{items.map((item) => (
 					<Item {...item} onClick={() => pickItem(item)} />
@@ -83,46 +87,56 @@ const App = () => {
 							<b>Money Inserted:</b> Ksh {moneyAvailable}
 						</p>
 
-						<div className="my-items">
-							<table>
-								<tr>
-									<th>Item</th>
-									<th className="right">Price</th>
-									<th className="right">Quantity</th>
-
-									<th className="right">Subtotal</th>
-								</tr>
-								{pickedItems.map((item) => (
+						{pickedItems.length > 0 ? (
+							<div className="my-items">
+								<table>
 									<tr>
-										<td>{item.title}</td>
-										<td className="right">{item.price}</td>
-										<td className="right">
-											{item.quantity}
-										</td>
+										<th>Item</th>
+										<th className="right">Price</th>
+										<th className="right">Quantity</th>
 
-										<td className="right">
-											{item.price * item.quantity}
-										</td>
+										<th className="right">Subtotal</th>
 									</tr>
-								))}
+									{pickedItems.map((item) => (
+										<tr>
+											<td>{item.title}</td>
+											<td className="right">
+												{item.price}
+											</td>
+											<td className="right">
+												{item.quantity}
+											</td>
 
-								<tr>
-									<th colSpan={3}>Grand Total</th>
-									<th className="total right">
-										Ksh {getGrandTotal(pickedItems)}
-									</th>
-								</tr>
-							</table>
-						</div>
+											<td className="right">
+												{item.price * item.quantity}
+											</td>
+										</tr>
+									))}
 
-						<p className="change">
+									<tr>
+										<th colSpan={3}>Grand Total</th>
+										<th className="total right insufficient">
+											Ksh {getGrandTotal(pickedItems)}
+										</th>
+									</tr>
+								</table>
+							</div>
+						) : (
+							<p className="pick-item">No Items Selected</p>
+						)}
+
+						<p className="change insufficient">
 							<b>Balance:</b> Ksh{' '}
 							{moneyAvailable - getGrandTotal(pickedItems)}
 						</p>
 
 						{/* {JSON.stringify(pickedItems)} */}
 
-						<AppButton title="Buy" />
+						<AppButton
+							title="Buy"
+							disabled={isMoneySufficient()}
+							onClick={() => alert(0)}
+						/>
 					</div>
 				)}
 			</div>
@@ -138,8 +152,12 @@ const Container = styled.div`
 	grid-template-rows: 1fr;
 	table {
 		width: 100%;
+		padding: 10px 0;
+		td,
+		th {
+			padding: 7px 0;
+		}
 		td {
-			padding: 3px 0;
 			border-bottom: 1px solid #dfdfdf;
 		}
 	}
@@ -148,6 +166,9 @@ const Container = styled.div`
 	}
 	.total {
 		/* text-decoration: double; */
+	}
+	.insufficient {
+		color: ${({ insufficient }) => (insufficient ? 'tomato' : 'initial')};
 	}
 
 	.list {
@@ -175,11 +196,20 @@ const Container = styled.div`
 			padding: 15px;
 			border-radius: 10px;
 			& > * {
-				padding: 10px 0;
+				/* padding: 10px 0; */
 			}
 			.available-coins {
 				display: flex;
 				justify-content: space-evenly;
+			}
+
+			.pick-item {
+				background: #f0f0f0;
+				color: grey;
+				padding: 20px 10px;
+				border-radius: 10px;
+				border: 2px dashed #dfdfdf;
+				opacity: 0.7;
 			}
 		}
 	}
