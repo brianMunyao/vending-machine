@@ -11,6 +11,12 @@ code {
 	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
 		monospace;
 }
+*,
+html {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
 
 ::-webkit-scrollbar {
 	width: 10px;
@@ -30,21 +36,21 @@ code {
 
 @font-face {
 	font-family: 'Digital';
-	font-weight: 900;
+	/* font-weight: 900; */
 	src: local('Digital'), url(./fonts/Digital/DS-DIGIB.TTF) format('opentype');
 }
 @font-face {
 	font-family: 'DigitalThinItalic';
-	font-weight: 900;
+	/* font-weight: 900; */
 	src: local('Digital'), url(./fonts/Digital/DS-DIGII.TTF) format('opentype');
 }
 @font-face {
 	font-family: 'DigitalItalic';
-	font-weight: 900;
+	/* font-weight: 900; */
 	src: local('Digital'), url(./fonts/Digital/DS-DIGIT.TTF) format('opentype');
 }
 @font-face {
 	font-family: 'DigitalThin';
-	font-weight: 900;
+	/* font-weight: 900; */
 	src: local('Digital'), url(./fonts/Digital/DS-DIGI.TTF) format('opentype');
 }

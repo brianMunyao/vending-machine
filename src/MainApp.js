@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 // import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import styled from 'styled-components';
-import Draggable from 'react-draggable';
 
-import Item from './Item';
 import ItemAlt from './ItemAlt';
 import KeyPad from './KeyPad';
 
@@ -52,58 +50,100 @@ const items = [
 	},
 ];
 
+const coins = [
+	{
+		value: 10,
+		src: require('./images/10sh.png'),
+		defaultPos: { x: 1104, y: -392 },
+	},
+	{
+		value: 20,
+		src: require('./images/20sh.png'),
+		defaultPos: { x: 1104, y: -322 },
+	},
+	{
+		value: 40,
+		src: require('./images/40sh.png'),
+		defaultPos: { x: 1104, y: -422 },
+	},
+];
+
 const MainApp = () => {
-	const [moneyInserted, setMoneyInserted] = useState(true);
+	const [moneyInserted, setMoneyInserted] = useState(false);
 	const [moneyAvailable, setMoneyAvailable] = useState(0);
-	const [pickedItems, setPickedItems] = useState([]);
+	const [completed, setCompleted] = useState(false);
+	// const [pickedItems, setPickedItems] = useState([]);
 
 	const [itemCode, setItemCode] = useState('');
+	const [codeCheck, setCodeCheck] = useState({});
 
 	const insertMoney = (money = 0) => {
+		setMoneyInserted(true);
 		setMoneyAvailable(moneyAvailable + money);
 	};
 
-	const [coords, setCoords] = useState([
-		{
-			value: 10,
-			src: require('./images/10sh.png'),
-			defaultPos: { x: 1104, y: -392 },
-		},
-		{
-			value: 20,
-			src: require('./images/20sh.png'),
-			defaultPos: { x: 1104, y: -322 },
-		},
-		{
-			value: 40,
-			src: require('./images/40sh.png'),
-			defaultPos: { x: 1104, y: -422 },
-		},
-	]);
-	const targetSlot = {
-		x: 905,
-		y: -317,
-	};
+	// const [coords, setCoords] = useState([
+	// {
+	// 	value: 10,
+	// 	src: require('./images/10sh.png'),
+	// 	defaultPos: { x: 1104, y: -392 },
+	// },
+	// {
+	// 	value: 20,
+	// 	src: require('./images/20sh.png'),
+	// 	defaultPos: { x: 1104, y: -322 },
+	// },
+	// {
+	// 	value: 40,
+	// 	src: require('./images/40sh.png'),
+	// 	defaultPos: { x: 1104, y: -422 },
+	// },
+	// ]);
+	// const targetSlot = {
+	// 	x: 905,
+	// 	y: -317,
+	// };
 
-	const handleOnStopDrag = (e, data, value) => {
-		alert(JSON.stringify({ x: data.lastX, y: data.lastY }));
-		if (
-			Math.abs(data.lastX - targetSlot.x) < 30 &&
-			Math.abs(data.lastY - targetSlot.y) < 30
-		) {
-			insertMoney(value);
-			console.log({ x: data.lastX, y: data.lastY });
-		}
-	};
+	// const handleOnStopDrag = (e, data, value) => {
+	// 	alert(JSON.stringify({ x: data.lastX, y: data.lastY }));
+	// 	if (
+	// 		Math.abs(data.lastX - targetSlot.x) < 30 &&
+	// 		Math.abs(data.lastY - targetSlot.y) < 30
+	// 	) {
+	// 		insertMoney(value);
+	// 		console.log({ x: data.lastX, y: data.lastY });
+	// 	}
+	// };
 
 	const handleConfirm = () => {
 		const item = items.filter((itm) => itm.id.toString() === itemCode);
 		if (item.length > 0) {
-			alert('Bought ' + item[0].title);
-			console.log(item);
+			if (moneyAvailable >= item[0].price) {
+				setMoneyAvailable(moneyAvailable - item[0].price);
+
+				setCodeCheck({
+					success:
+						'Bought: ' + item[0].title + ' -> ' + item[0].price,
+				});
+				setItemCode('');
+			} else {
+				setCodeCheck({ error: 'Insufficent amount' });
+			}
 		} else {
-			alert('Invalid Code');
+			setCodeCheck({ error: 'Invalid Code. Try Again.' });
+			setItemCode('');
 		}
+	};
+
+	const returnChange = () => {
+		setCompleted(true);
+		setInterval(() => {
+			setCodeCheck({});
+			setCompleted(false);
+			setItemCode('');
+			setMoneyAvailable(0);
+			setMoneyInserted(false);
+		}, 4000);
 	};
 
 	return (
@@ -116,42 +156,73 @@ const MainApp = () => {
 							<ItemAlt {...itm} key={i} />
 						))}
 					</div>
-
-					{/* <div className="bottom-board">
-						{items.slice(0, 4).map((itm, i) => (
-							<span key={i}>{itm.title}</span>
-						))}
-					</div> */}
 				</div>
+
 				<div className="right">
 					<div className="line"></div>
 
 					<div className="screen">
-						{moneyAvailable > 0 ? (
+						{completed ? (
+							<div className="final">
+								{moneyAvailable > 0 && (
+									<p className="red">
+										Your Change is KSH{moneyAvailable}
+									</p>
+								)}
+								<p className="blink red">Thank You.</p>
+							</div>
+						) : moneyInserted ? (
 							<div className="screen-inner">
+								<p className="balance">
+									Balance: {moneyAvailable}
+								</p>
+
 								<p className="item-code">
-									{itemCode.length === 0 ? (
-										<p>
-											CODE: <p className="blink">_</p>
+									CODE:{' '}
+									<span className="blue">{itemCode}</span>
+									<span className="blink blue">_</span>
+								</p>
+
+								<p className="code-check">
+									{codeCheck.error ? (
+										<p className="error red">
+											{codeCheck.error}
 										</p>
+									) : codeCheck.success ? (
+										<div>
+											<p className="success green">
+												{codeCheck.success}
+											</p>
+											<p className="succ-more">
+												Press:
+												{/* &ensp;Confirm - to continue */}
+												<br /> &ensp;Cancel - to exit
+											</p>
+										</div>
 									) : (
-										<p>{itemCode}</p>
+										<></>
 									)}
 								</p>
 							</div>
 						) : (
-							<>
-								<p className="blink">INSERT MONEY</p>
+							<div className="start-screen">
+								<p className="red">Welcome.</p>
+								<p className="red">All drinks are KSH50</p>
+								<p className="blink red">INSERT MONEY</p>
 
-								<p className="balance blink">
+								{/* <p className="balance blink red">
 									KSH {moneyAvailable}
-								</p>
-							</>
+								</p> */}
+							</div>
 						)}
 					</div>
 
 					<KeyPad
-						cancel={() => setItemCode('')}
+						cancel={
+							itemCode !== ''
+								? () => setItemCode('')
+								: () => returnChange()
+						}
 						confirm={handleConfirm}
 						value={itemCode}
 						onChangeText={(txt) => setItemCode(txt)}
@@ -162,7 +233,7 @@ const MainApp = () => {
 			</div>
 
 			<div className="coins">
-				{coords.map((coin, i) => (
+				{coins.map((coin, i) => (
 					<img
 						height={100}
 						src={coin.src}
@@ -181,6 +252,16 @@ const Container = styled.div`
 	height: 96vh;
 	padding: 2vh 0;
 	min-width: 1000px;
+
+	.red {
+		color: red;
+	}
+	.green {
+		color: #0e9f0e;
+	}
+	.blue {
+		color: dodgerblue;
+	}
 
 	.vending {
 		background: #1e90ff;
@@ -211,16 +292,6 @@ const Container = styled.div`
 				row-gap: 50px;
 				grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
 			}
-			/* .bottom-board {
-				background: burlywood;
-				display: grid;
-				grid-template-columns: repeat(3, 1fr);
-				padding: 4px;
-				span {
-					font-weight: 600;
-					font-size: 15px;
-				}
-			} */
 		}
 		.right {
 			.line {
@@ -242,23 +313,60 @@ const Container = styled.div`
 				height: 200px;
 				z-index: 2;
 				left: 50%;
-				top: 40px;
+				top: 30px;
 				transform: translateX(-50%);
 				font-family: DigitalThin;
-				color: red;
 				font-size: 30px;
 				text-align: center;
+				/* overflow: hidden; */
 
-				.screen-inner {
-					position: absolute;
+				.start-screen {
 					height: 100%;
-					width: 100%;
-					color: white;
-					font-size: 20px;
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					justify-content: space-between;
+					* {
+						margin: 10px 0;
+					}
 				}
 
 				.balance {
 					font-size: 30px;
+				}
+				.screen-inner {
+					position: absolute;
+					top: -0;
+					left: 0;
+					height: 100%;
+					width: 100%;
+					color: white;
+					font-size: 20px;
+					padding: 2% 5%;
+					text-align: left;
+					margin: 0%;
+					/* background: #57131379; */
+
+					.balance {
+						font-size: 25px;
+						letter-spacing: 1px;
+						text-decoration: underline;
+					}
+					.item-code {
+						font-size: 22px;
+						letter-spacing: 1px;
+						margin-top: 10px;
+					}
+					.code-check {
+						margin-top: 20px;
+
+						.success {
+							margin-bottom: 10px;
+						}
+						.succ-more {
+							font-size: 18px;
+						}
+					}
 				}
 			}
 			.coin-slot {
@@ -322,6 +430,11 @@ const Container = styled.div`
 			}
 		}
 		animation: blink 1.5s linear infinite both;
+	}
+	.final {
+		* {
+			margin: 15px 0;
+		}
 	}
 `;
 

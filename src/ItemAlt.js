@@ -29,7 +29,7 @@ const Container = styled.div`
 		background: #e8a539;
 		/* text-align: center; */
 		position: relative;
-		height: 28px;
+		height: 30px;
 		/* height: 15px; */
 		margin-top: -2px;
 		.title {
@@ -43,6 +43,7 @@ const Container = styled.div`
 			letter-spacing: 0.2px;
 			padding: 3px 5px;
 			width: max-content;
+			margin-top: 2px;
 		}
 	}
 `;

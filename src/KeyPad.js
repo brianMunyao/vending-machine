@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const KeyPad = ({ value, onChangeText, confirm, cancel }) => {
+const KeyPad = ({ money, value, onChangeText, confirm, cancel }) => {
 	const btns = [1, 2, 3, 4, 5, 6, 7, 8, 9, '', 0, ''];
 
 	const AppBtn = ({ value, onClick }) => {
