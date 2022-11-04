@@ -139,15 +139,22 @@ const MainApp = () => {
 	};
 
 	const returnChange = () => {
-		setCompleted(true);
-		setInterval(() => {
+		if (!completed) {
+			setCompleted(true);
+		} else {
 			setCodeCheck({});
 			setCompleted(false);
 			setItemCode('');
 			setMoneyAvailable(0);
 			setMoneyInserted(false);
-		}, 4000);
+		}
+
+		// setInterval(() => {
+		// }, 4000);
 	};
+	// const exitExit=()=>[
+
+	// ]
 
 	return (
 		// <DragDropContext>
