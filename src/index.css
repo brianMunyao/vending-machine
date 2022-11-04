@@ -27,3 +27,24 @@ code {
 ::-webkit-scrollbar-thumb:hover {
 	background: #555;
 }
+
+@font-face {
+	font-family: 'Digital';
+	font-weight: 900;
+	src: local('Digital'), url(./fonts/Digital/DS-DIGIB.TTF) format('opentype');
+}
+@font-face {
+	font-family: 'DigitalThinItalic';
+	font-weight: 900;
+	src: local('Digital'), url(./fonts/Digital/DS-DIGII.TTF) format('opentype');
+}
+@font-face {
+	font-family: 'DigitalItalic';
+	font-weight: 900;
+	src: local('Digital'), url(./fonts/Digital/DS-DIGIT.TTF) format('opentype');
+}
+@font-face {
+	font-family: 'DigitalThin';
+	font-weight: 900;
+	src: local('Digital'), url(./fonts/Digital/DS-DIGI.TTF) format('opentype');
+}

@@ -6,9 +6,42 @@ import AppButton from './AppButton';
 import AppBtnAlt from './AppBtnAlt';
 
 const items = [
-	{ title: 'Coke', price: 50, src: require('./images/coke.png') },
-	{ title: 'Fanta', price: 50, src: require('./images/fanta.png') },
-	{ title: 'Pepsi', price: 50, src: require('./images/pepsi.png') },
+	{
+		title: 'Coke',
+		price: 50,
+		src: require('./images/coke.png'),
+		available: 12,
+	},
+	{
+		title: 'Coke Zero',
+		price: 50,
+		src: require('./images/coke_zero.png'),
+		available: 12,
+	},
+	{
+		title: 'Fanta',
+		price: 50,
+		src: require('./images/fanta.png'),
+		available: 18,
+	},
+	{
+		title: 'Pepsi',
+		price: 50,
+		src: require('./images/pepsi.png'),
+		available: 12,
+	},
+	{
+		title: 'Mirinda',
+		price: 50,
+		src: require('./images/mirinda.png'),
+		available: 1,
+	},
+	{
+		title: 'Mountain Dew',
+		price: 50,
+		src: require('./images/mountain_dew.png'),
+		available: 6,
+	},
 ];
 
 const App = () => {
