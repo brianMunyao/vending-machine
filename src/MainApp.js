@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import useSound from 'use-sound';
 
 import ItemAlt from './ItemAlt';
 import KeyPad from './KeyPad';
+import coinSound from './sounds/coins.mp3';
 
 const items = [
 	{
@@ -71,12 +73,14 @@ const MainApp = () => {
 	const [moneyInserted, setMoneyInserted] = useState(false);
 	const [moneyAvailable, setMoneyAvailable] = useState(0);
 	const [completed, setCompleted] = useState(false);
+	const [play] = useSound(coinSound);
 	// const [pickedItems, setPickedItems] = useState([]);
 
 	const [itemCode, setItemCode] = useState('');
 	const [codeCheck, setCodeCheck] = useState({});
 
 	const insertMoney = (money = 0) => {
+		play();
 		setMoneyInserted(true);
 		setMoneyAvailable(moneyAvailable + money);
 	};
