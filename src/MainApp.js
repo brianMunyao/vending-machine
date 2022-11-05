@@ -51,72 +51,50 @@ const items = [
 	},
 ];
 
-const coins = [
-	{
-		value: 10,
-		src: require('./images/10sh.png'),
-		defaultPos: { x: 1104, y: -392 },
-	},
-	{
-		value: 20,
-		src: require('./images/20sh.png'),
-		defaultPos: { x: 1104, y: -322 },
-	},
-	{
-		value: 40,
-		src: require('./images/40sh.png'),
-		defaultPos: { x: 1104, y: -422 },
-	},
-];
-
 const MainApp = () => {
 	const [moneyInserted, setMoneyInserted] = useState(false);
 	const [moneyAvailable, setMoneyAvailable] = useState(0);
 	const [completed, setCompleted] = useState(false);
 	const [play] = useSound(coinSound);
-	// const [pickedItems, setPickedItems] = useState([]);
+	const [boughtItems, setBoughtItems] = useState([]);
+	const [coins, setCoins] = useState([
+		{
+			value: 10,
+			src: require('./images/10sh.png'),
+			animate: false,
+		},
+		{
+			value: 20,
+			src: require('./images/20sh.png'),
+			animate: false,
+		},
+		{
+			value: 40,
+			src: require('./images/40sh.png'),
+			animate: false,
+		},
+	]);
 
 	const [itemCode, setItemCode] = useState('');
 	const [codeCheck, setCodeCheck] = useState({});
 
-	const insertMoney = (money = 0) => {
+	const insertMoney = (val = 0) => {
 		play();
 		setMoneyInserted(true);
-		setMoneyAvailable(moneyAvailable + money);
+		setMoneyAvailable(moneyAvailable + val);
+		setCoins(
+			[...coins].map((c) =>
+				c.value === val ? { ...c, animate: true } : c
+			)
+		);
+		setTimeout(() => {
+			setCoins(
+				[...coins].map((c) =>
+					c.value === val ? { ...c, animate: false } : c
+				)
+			);
+		}, 500);
 	};
-
-	// const [coords, setCoords] = useState([
-	// {
-	// 	value: 10,
-	// 	src: require('./images/10sh.png'),
-	// 	defaultPos: { x: 1104, y: -392 },
-	// },
-	// {
-	// 	value: 20,
-	// 	src: require('./images/20sh.png'),
-	// 	defaultPos: { x: 1104, y: -322 },
-	// },
-	// {
-	// 	value: 40,
-	// 	src: require('./images/40sh.png'),
-	// 	defaultPos: { x: 1104, y: -422 },
-	// },
-	// ]);
-	// const targetSlot = {
-	// 	x: 905,
-	// 	y: -317,
-	// };
-
-	// const handleOnStopDrag = (e, data, value) => {
-	// 	alert(JSON.stringify({ x: data.lastX, y: data.lastY }));
-	// 	if (
-	// 		Math.abs(data.lastX - targetSlot.x) < 30 &&
-	// 		Math.abs(data.lastY - targetSlot.y) < 30
-	// 	) {
-	// 		insertMoney(value);
-	// 		console.log({ x: data.lastX, y: data.lastY });
-	// 	}
-	// };
 
 	const handleConfirm = () => {
 		const item = items.filter((itm) => itm.id.toString() === itemCode);
@@ -128,6 +106,7 @@ const MainApp = () => {
 					success:
 						'Bought: ' + item[0].title + ' -> ' + item[0].price,
 				});
+				boughtItems.push(item[0].src);
 				setItemCode('');
 			} else {
 				setCodeCheck({ error: 'Insufficent amount' });
@@ -147,14 +126,9 @@ const MainApp = () => {
 			setItemCode('');
 			setMoneyAvailable(0);
 			setMoneyInserted(false);
+			setBoughtItems([]);
 		}
-
-		// setInterval(() => {
-		// }, 4000);
 	};
-	// const exitExit=()=>[
-
-	// ]
 
 	return (
 		// <DragDropContext>
@@ -164,6 +138,12 @@ const MainApp = () => {
 					<div className="items-row">
 						{items.map((itm, i) => (
 							<ItemAlt {...itm} key={i} />
+						))}
+					</div>
+
+					<div className="bought">
+						{boughtItems.map((itm) => (
+							<img src={itm} alt="itm" />
 						))}
 					</div>
 				</div>
@@ -245,6 +225,12 @@ const MainApp = () => {
 			<div className="coins">
 				{coins.map((coin, i) => (
 					<img
+						key={i}
+						style={{
+							animation: coin.animate
+								? 'coinMove .5s linear 1'
+								: 'none',
+						}}
 						height={100}
 						src={coin.src}
 						alt=""
@@ -292,15 +278,44 @@ const Container = styled.div`
 		}
 
 		.left {
-			margin: 10px;
-			background: #614943;
+			margin: 0px 10px 10px 10px;
 			padding-top: 10px;
-			border: 3px solid #1568bb;
+			display: grid;
+			grid-template-columns: 1fr;
+			grid-template-rows: 1fr 80px;
+			row-gap: 15px;
+
 			.items-row {
+				border-radius: 20px;
+				background: #614943;
+				border: 3px solid #1568bb;
 				display: grid;
 				grid-auto-rows: 80px;
 				row-gap: 50px;
 				grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+			}
+			.bought {
+				background: #2d2c2c;
+				padding: 10px;
+				margin: 0 10px;
+				overflow: auto;
+				display: flex;
+				flex-direction: row;
+				border-radius: 20px;
+
+				&::-webkit-scrollbar {
+					display: none;
+				}
+
+				img {
+					height: 100%;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					/* img {
+						height: 100%;
+					} */
+				}
 			}
 		}
 		.right {
@@ -385,7 +400,7 @@ const Container = styled.div`
 				top: 280px;
 				border-radius: 4px;
 				background: black;
-				height: 70px;
+				height: 80px;
 				width: 10px;
 			}
 		}
@@ -393,7 +408,9 @@ const Container = styled.div`
 	.coins {
 		position: absolute;
 		right: 10px;
-		bottom: 10px;
+		/* bottom: 10px; */
+		top: 50%;
+		transform: translateY(-50%);
 		display: flex;
 		flex-direction: column;
 		@keyframes rotat {
@@ -408,23 +425,38 @@ const Container = styled.div`
 			}
 		}
 		img {
-			/* user-select: none; */
 			cursor: pointer;
 			margin: 0;
-			height: 100px;
+			height: 90px;
 			margin: 10px 10px 10px 0;
 			transition: all 0.2s linear;
+			@keyframes coinMove {
+				0% {
+					transform: translate(0, 0);
+				}
+				50% {
+					transform: translate(-200px, 0);
+					opacity: 1;
+				}
+				55% {
+					opacity: 0;
+				}
+				98% {
+					opacity: 0;
+				}
+				100% {
+					opacity: 1;
+					transform: translate(0, 0);
+				}
+			}
+
 			&:hover {
 				transform: rotateY(20deg);
 			}
-			&:active {
+			/* &:active {
 				transform: rotateY(40deg);
-			}
+			} */
 		}
-
-		/* top: 0; */
-		/* height: 0; */
-		/* overflow: auto; */
 	}
 
 	.blink {
