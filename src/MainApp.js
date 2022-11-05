@@ -49,6 +49,27 @@ const items = [
 		src: require('./images/mountain_dew.png'),
 		available: 6,
 	},
+	{
+		id: 107,
+		title: '7up',
+		price: 50,
+		src: require('./images/7up.png'),
+		available: 12,
+	},
+	{
+		id: 108,
+		title: 'Monster',
+		price: 50,
+		src: require('./images/monster.png'),
+		available: 1,
+	},
+	{
+		id: 109,
+		title: 'Sprite',
+		price: 50,
+		src: require('./images/sprite.png'),
+		available: 6,
+	},
 ];
 
 const MainApp = () => {
