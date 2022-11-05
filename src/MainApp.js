@@ -57,6 +57,7 @@ const MainApp = () => {
 	const [completed, setCompleted] = useState(false);
 	const [play] = useSound(coinSound);
 	const [boughtItems, setBoughtItems] = useState([]);
+	const [transacting, setTransacting] = useState(false);
 	const [coins, setCoins] = useState([
 		{
 			value: 10,
@@ -79,6 +80,9 @@ const MainApp = () => {
 	const [codeCheck, setCodeCheck] = useState({});
 
 	const insertMoney = (val = 0) => {
+		if (!transacting) {
+			setTransacting(true);
+		}
 		play();
 		setMoneyInserted(true);
 		setMoneyAvailable(moneyAvailable + val);
@@ -97,37 +101,44 @@ const MainApp = () => {
 	};
 
 	const handleConfirm = () => {
-		const item = items.filter((itm) => itm.id.toString() === itemCode);
-		if (item.length > 0) {
-			if (moneyAvailable >= item[0].price) {
-				setMoneyAvailable(moneyAvailable - item[0].price);
+		if (transacting) {
+			const item = items.filter((itm) => itm.id.toString() === itemCode);
+			if (item.length > 0) {
+				if (moneyAvailable >= item[0].price) {
+					setMoneyAvailable(moneyAvailable - item[0].price);
 
-				setCodeCheck({
-					success:
-						'Bought: ' + item[0].title + ' -> ' + item[0].price,
-				});
-				boughtItems.push(item[0].src);
-				setItemCode('');
+					setCodeCheck({
+						success:
+							'Bought: ' + item[0].title + ' -> ' + item[0].price,
+					});
+					boughtItems.push(item[0].src);
+					setItemCode('');
+				} else {
+					setCodeCheck({ error: 'Insufficent amount' });
+				}
 			} else {
-				setCodeCheck({ error: 'Insufficent amount' });
+				setCodeCheck({ error: 'Invalid Code. Try Again.' });
+				setItemCode('');
 			}
-		} else {
-			setCodeCheck({ error: 'Invalid Code. Try Again.' });
-			setItemCode('');
 		}
 	};
 
 	const returnChange = () => {
-		if (!completed) {
+		if (transacting) {
 			setCompleted(true);
-		} else {
-			setCodeCheck({});
-			setCompleted(false);
-			setItemCode('');
-			setMoneyAvailable(0);
-			setMoneyInserted(false);
-			setBoughtItems([]);
+			setTimeout(() => {
+				setCodeCheck({});
+				setCompleted(false);
+				setItemCode('');
+				setMoneyAvailable(0);
+				setMoneyInserted(false);
+				setBoughtItems([]);
+			}, 3000);
 		}
+		// if ( else {
+
+		// }!completed) {
+		// }
 	};
 
 	return (
@@ -183,15 +194,15 @@ const MainApp = () => {
 											<p className="success green">
 												{codeCheck.success}
 											</p>
-											<p className="succ-more">
-												Press:
-												{/* &ensp;Confirm - to continue */}
-												<br /> &ensp;Cancel - to exit
-											</p>
 										</div>
 									) : (
 										<></>
 									)}
+									<p className="succ-more">
+										Press:
+										{/* &ensp;Confirm - to continue */}
+										<br /> &ensp;Cancel - to exit
+									</p>
 								</p>
 							</div>
 						) : (
@@ -215,10 +226,12 @@ const MainApp = () => {
 						}
 						confirm={handleConfirm}
 						value={itemCode}
-						onChangeText={(txt) => setItemCode(txt)}
+						onChangeText={(txt) => {
+							if (transacting) setItemCode(txt);
+						}}
 					/>
 
-					<div className="coin-slot"></div>
+					{/* <div className="coin-slot"></div> */}
 				</div>
 			</div>
 
@@ -278,7 +291,7 @@ const Container = styled.div`
 		}
 
 		.left {
-			margin: 0px 10px 10px 10px;
+			margin: 5px 10px 15px 15px;
 			padding-top: 10px;
 			display: grid;
 			grid-template-columns: 1fr;
@@ -312,9 +325,16 @@ const Container = styled.div`
 					display: flex;
 					align-items: center;
 					justify-content: center;
-					/* img {
-						height: 100%;
-					} */
+
+					@keyframes drop {
+						from {
+							transform: translateY(-30px);
+						}
+						to {
+							transform: translateY(0);
+						}
+					}
+					animation: drop 0.4s cubic-bezier(0.215, 0.61, 0.355, 1) 1;
 				}
 			}
 		}
@@ -389,7 +409,9 @@ const Container = styled.div`
 							margin-bottom: 10px;
 						}
 						.succ-more {
+							margin-top: 30px;
 							font-size: 18px;
+							font-family: DigitalThinItalic;
 						}
 					}
 				}

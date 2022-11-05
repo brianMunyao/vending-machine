@@ -17,8 +17,8 @@ const KeyPad = ({ money, value, onChangeText, confirm, cancel }) => {
 	return (
 		<Container>
 			<div className="funcs">
-				<FuncBtn onClick={cancel}>Cancel</FuncBtn>
-				<FuncBtn onClick={confirm}>Confirm</FuncBtn>
+				<CancelBtn onClick={cancel}>Cancel</CancelBtn>
+				<ConfirmBtn onClick={confirm}>Confirm</ConfirmBtn>
 			</div>
 			<div className="nums">
 				{btns.map((bt) => (
@@ -161,10 +161,123 @@ const Btn = styled.button`
 	}
 `;
 
-const FuncBtn = styled.button`
+const ConfirmBtn = styled.button`
 	/* margin: 10px; */
-	width: 100%;
-	height: 100%;
+
+	appearance: none;
+	color: #27ae60;
+	/* color: #fff; */
+	box-shadow: rgba(39, 174, 96, 0.15) 0 4px 9px;
+	border-style: none;
+	border-radius: 4px;
+	cursor: pointer;
+	font-weight: 600;
+	letter-spacing: normal;
+
+	&:hover {
+		opacity: 1;
+		transform: translateY(0);
+		transition-duration: 0.35s;
+	}
+
+	&:active {
+		background-color: #91f7bb;
+		transform: translateY(1px);
+		transition-duration: 0.35s;
+	}
+
+	/* 
+	backface-visibility: hidden;
+	box-sizing: border-box;
+	display: inline-block;
+	font-family: Inter, -apple-system, system-ui, 'Segoe UI', Helvetica, Arial,
+		sans-serif;
+	font-size: 16px;
+	line-height: 1.5;
+	outline: none;
+	overflow: hidden;
+	padding: 3px 4px;
+	position: relative;
+	text-align: center;
+	text-decoration: none;
+	transform: translate3d(0, 0, 0);
+	transition: all 0.3s;
+	user-select: none;
+	-webkit-user-select: none;
+	touch-action: manipulation;
+	vertical-align: top;
+	white-space: nowrap;
+
+	&:hover {
+		background-color: #1e8449;
+		opacity: 1;
+		transform: translateY(0);
+		transition-duration: 0.35s;
+	}
+
+	&:active {
+		transform: translateY(2px);
+		transition-duration: 0.35s;
+	}
+
+	&:hover {
+		box-shadow: rgba(39, 174, 96, 0.2) 0 6px 12px;
+	} */
+`;
+
+const CancelBtn = styled.button`
+	align-items: center;
+	background-color: #ffe7e7;
+	background-position: 0 0;
+	border: 1px solid #fee0e0;
+	border-radius: 4px;
+	box-sizing: border-box;
+	color: #d33a2c;
+	cursor: pointer;
+	display: flex;
+	font-size: 1rem;
+	font-weight: 700;
+	line-height: 33.4929px;
+	list-style: outside url(https://www.smashingmagazine.com/images/bullet.svg)
+		none;
+	padding: 2px 8px;
+	/* text-align: left; */
+	text-decoration: none;
+	text-shadow: none;
+	text-underline-offset: 1px;
+	transition: all 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+	user-select: none;
+	-webkit-user-select: none;
+	touch-action: manipulation;
+	white-space: nowrap;
+	word-break: break-word;
+
+	&:active,
+	&:hover,
+	&:focus {
+		outline: 0;
+	}
+
+	&:hover {
+		background-color: #ffe3e3;
+		border-color: #faa4a4;
+	}
+	&:active {
+		transform: translateY(1px);
+		transition-duration: 0.35s;
+		/* background-color: #d86358; */
+		background-color: #f4bebe;
+		box-shadow: rgba(0, 0, 0, 0.12) 0 1px 3px 0 inset;
+		/* color: #ffffff; */
+	}
+
+	/* &:active:hover,
+	&:focus:hover,
+	&:focus {
+		background-color: #d33a2c;
+		box-shadow: rgba(0, 0, 0, 0.12) 0 1px 3px 0 inset;
+		color: #ffffff;
+	} */
 `;
 
 export default KeyPad;
